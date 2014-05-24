@@ -4,7 +4,7 @@
 // 'quran' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'quran.controllers' is found in controllers.js
-angular.module('quran', ['ionic', 'quran.controllers'])
+angular.module('quran', ['ionic', 'quran.controllers', 'quran.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -30,11 +30,12 @@ angular.module('quran', ['ionic', 'quran.controllers'])
       controller: 'AppCtrl'
     })
 
-    .state('app.search', {
-      url: "/search",
+    .state('app.pages', {
+      url: "/pages",
       views: {
         'menuContent' :{
-          templateUrl: "templates/search.html"
+          templateUrl: "templates/pages.html",
+          controller: 'PagesCtrl'
         }
       }
     })

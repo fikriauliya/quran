@@ -16,3 +16,7 @@ angular.module('quran.controllers', [])
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 })
+
+.controller('PagesCtrl', function($scope, SurahTextServices) {
+  $scope.surah = SurahTextServices.getAllSurah();
+});

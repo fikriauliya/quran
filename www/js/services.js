@@ -238,7 +238,7 @@ var pages = [
   [92, 15],   [95, 1],  [97, 1],  [98, 8],  [100, 10],
   [103, 1],   [106, 1],   [109, 1], [112, 1]];
 
-angular.module('quran.services')
+angular.module('quran.services', [])
   .factory('SurahTextServices', function() {
     function SurahTextServices() {
       this.getPage = function(surahNo, ayahNo) {
@@ -259,7 +259,7 @@ angular.module('quran.services')
       this.getAllSurah = function() {
         var res = [];
         for (var i=0;i<raw_ayah.length;i++) {
-          var page = getPage(i+1, 1);
+          var page = this.getPage(i+1, 1);
           res.push({
             name: raw_ayah[i][5],
             location: raw_ayah[i][7],
