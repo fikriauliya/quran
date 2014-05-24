@@ -4,14 +4,14 @@
   </ion-nav-buttons>
   <ion-content class="has-header">
     <div class="row" style="border-bottom:1px solid; margin-top: 3px">
-      <div class="col" style="flex:0 0 13%; max-width:13%"><b>No</b></div>
+      <div class="col col-10"><b>No</b></div>
       <div class="col col-33"><b>Surah</b></div>
       <div class="col col-25"></div>
       <div class="col"><b>Ayah</b></div>
       <div class="col"><b>Page</b></div>
     </div>
     <div class="row" ng-repeat="cur_surah in surah" style="border-bottom:1px solid #DCDCDC; margin-top: 2px" ng-click="go(cur_surah)">
-      <div class="col" style="flex:0 0 13%; max-width:13%"><h4>{{cur_surah.number}}</h4></div>
+      <div class="col col-10"><h5>{{cur_surah.number}}</h5></div>
       <div class="col col-33">
         <div><b>{{cur_surah.name}}</b></div>
         <div><small>{{cur_surah.arabic_name}}</small></div>
