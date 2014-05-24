@@ -40,6 +40,16 @@ angular.module('quran', ['ionic', 'quran.controllers', 'quran.services'])
       }
     })
 
+    .state('app.page', {
+      url: "/pages/:pageNo",
+      views: {
+        'menuContent' :{
+          templateUrl: "templates/page.html",
+          controller: 'PageCtrl'
+        }
+      }
+    })
+
     .state('app.browse', {
       url: "/browse",
       views: {
