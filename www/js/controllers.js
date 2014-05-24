@@ -22,6 +22,25 @@ angular.module('quran.controllers', [])
   $scope.go = function(cur_surah) {
     $state.go('app.page', {'pageNo':cur_surah.page})
   }
+
+  var fileTransfer = new FileTransfer();
+  var uri = encodeURI("https://raw.githubusercontent.com/fikriauliya/quran_resources/master/images/1.png");
+  var fileURL = 'file:///storage/emulated/0/quran/1.png'
+
+  window.alert("Start download");
+  fileTransfer.download(
+      uri,
+      fileURL,
+      function(entry) {
+          window.alert("download complete: " + entry.fullPath);
+      },
+      function(error) {
+          window.alert("download error source " + error.source);
+          window.alert("download error target " + error.target);
+          window.alert("upload error code" + error.code);
+      },
+      false);
+  window.alert("Finish download");
 })
 
 .controller('PageCtrl', function($scope, $stateParams, SurahTextServices) {
