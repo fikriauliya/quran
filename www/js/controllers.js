@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('quran.controllers', [])
 
 .controller('AppCtrl', function($scope) {
 })
