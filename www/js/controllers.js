@@ -25,30 +25,10 @@ angular.module('quran.controllers', ['ionic'])
 
   var stopDownload = false;
 
-  var popup = $ionicPopup.show({
-    templateUrl: 'templates/download-modal.html',
-    title: 'Downloading...',
-    scope: $scope,
-    buttons: [
-      { 
-        text: 'Cancel',
-        type: 'button-positive',
-        onTap: function(e){
-          stopDownload = true;
-          return "Canceled";
-        }
-      }
-    ]
-  });
-  popup.then(function(res) {
-    console.log("Popup closed");
-    console.log(res);
-  });
-
   $scope.progress = 0;
   $scope.downloaded_count = 0;
 
-  $scope.startDownload = function() {
+  $scope.startDownload = function(popup) {
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
     window.requestFileSystem(PERSISTENT, 0, onInitFs, errorHandler);  
 
@@ -87,6 +67,7 @@ angular.module('quran.controllers', ['ionic'])
                 false);
             } else {
               $scope.downloaded_count = $scope.downloaded_count + 1;
+              $scope.progress = $scope.downloaded_count * 100 / 604;
               callback();
             }
           }
@@ -107,7 +88,32 @@ angular.module('quran.controllers', ['ionic'])
   }
 
   if (typeof(FileTransfer) === "function") { 
-    $scope.startDownload();
+    var is_first_time_loading = localStorage.getItem("is_first_time_loading");
+    if (is_first_time_loading === null) {
+      localStorage.setItem("is_first_time_loading", true);
+      var popup = $ionicPopup.show({
+        templateUrl: 'templates/download-modal.html',
+        title: 'Downloading...',
+        scope: $scope,
+        buttons: [
+          { 
+            text: 'Cancel',
+            type: 'button-positive',
+            onTap: function(e){
+              stopDownload = true;
+              return "Canceled";
+            }
+          }
+        ]
+      });
+      popup.then(function(res) {
+        console.log("Popup closed");
+        console.log(res);
+      });
+      $scope.startDownload(popup);
+    } else {
+      console.log("Not first time loading");
+    }
   } else {
     console.log("FileTransfer function is undefined");
   }
