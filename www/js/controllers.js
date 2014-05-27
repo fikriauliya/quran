@@ -44,44 +44,60 @@ angular.module('quran.controllers', ['ionic'])
   $scope.downloaded_count = 0;
 
   $scope.startDownload = function() {
-    var indexes = [];
-    for (var i = 1; i <= 604; i++) {
-      indexes.push(i);
-    };
-    
-    async.eachSeries(indexes, function(i, callback){
-      is_downloaded = localStorage.getItem("page_" + i + "_downloaded");
-      if (is_downloaded === null) {
-        var fileTransfer = new FileTransfer();
-        var uri = encodeURI("https://raw.githubusercontent.com/fikriauliya/quran_resources/master/images_small/" + i + ".png");
-        var fileURL = 'file:///storage/emulated/0/quran/' + i + '.png';
+    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+    window.requestFileSystem(PERSISTENT, 0, onInitFs, errorHandler);  
 
-        fileTransfer.download(
-          uri,
-          fileURL,
-          function(entry) {            
-            localStorage.setItem("page_" + i + "_downloaded", true);
-            $scope.$apply(function() {
-              $scope.downloaded_count = $scope.downloaded_count + 1;
-              $scope.progress = $scope.downloaded_count * 100 / 604;
-            });
+    function onInitFs(fileSystem) {
+      fileSystem.root.getDirectory('quran_resources', {create: true}, function(dirEntry) {
+        // console.log(fileSystem.root.fullPath);
+        console.log(dirEntry.toURL());
+        var indexes = [];
+        for (var i = 1; i <= 604; i++) {
+          indexes.push(i);
+        };
+
+        async.eachSeries(indexes, function(i, callback){
+          is_downloaded = localStorage.getItem("page_" + i + "_downloaded");
+          if (is_downloaded === null) {
+            var fileTransfer = new FileTransfer();
+            var uri = encodeURI("https://raw.githubusercontent.com/fikriauliya/quran_resources/master/images_small/" + i + ".png");
+            var fileURL = dirEntry.toURL() + '/quran/' + i + '.png';
+
+            console.log(i);
+            fileTransfer.download(
+              uri,
+              fileURL,
+              function(entry) {            
+                localStorage.setItem("page_" + i + "_downloaded", true);
+                $scope.$apply(function() {
+                  $scope.downloaded_count = $scope.downloaded_count + 1;
+                  $scope.progress = $scope.downloaded_count * 100 / 604;
+                });
+                callback();
+              },
+              function(error) {
+                callback(error);
+              },
+              false);
+          } else {
+            $scope.downloaded_count = $scope.downloaded_count + 1;
             callback();
-          },
-          function(error) {
-            callback(error);
-          },
-          false);
-      } else {
-        $scope.downloaded_count = $scope.downloaded_count + 1;
-        callback();
-      }
-    }, function(err){
-      if (err) {
-        window.alert("Error: " + err);
-      } else {
-        popup.close();
-      }
-    });
+          }
+        }, function(err){
+          if (err) {
+            window.alert("Error: " + err);
+            console.log(err);
+          } else {
+            popup.close();
+          }
+        });
+      }, errorHandler);
+    }
+
+    function errorHandler(message) {
+      window.alert(message);
+      console.log(message);
+    }
   }
 
   if (typeof(FileTransfer) === "function") { 
