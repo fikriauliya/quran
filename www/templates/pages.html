@@ -3,7 +3,7 @@
     <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
-    <button class="button" ng-click="startDownload()">
+    <button ng-if="not_all_downloaded" class="button" ng-click="startDownload()">
       <i class="ion-ios7-cloud-download-outline"></i>
       Download all
     </button>

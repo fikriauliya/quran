@@ -19,11 +19,19 @@ angular.module('quran.controllers', ['ionic'])
 
 .controller('PagesCtrl', function($scope, $state, $ionicPopup, SurahTextServices) {
   $scope.surah = SurahTextServices.getAllSurah();
+  if (localStorage.getItem("all_pages_downloaded") === null){
+    $scope.not_all_downloaded = true;
+  } else {
+    $scope.not_all_downloaded = false;
+  }
+
   $scope.go = function(cur_surah) {
     $state.go('app.page', {'pageNo':cur_surah.page})
   }
 
   $scope.startDownload = function() {
+    if (localStorage.getItem("all_pages_downloaded") !== null) return;
+
     $scope.progress = 0;
     $scope.downloaded_count = 0;
 
@@ -85,8 +93,10 @@ angular.module('quran.controllers', ['ionic'])
                 },
                 false);
             } else {
-              $scope.downloaded_count = $scope.downloaded_count + 1;
-              $scope.progress = $scope.downloaded_count * 100 / 604;
+              $scope.$apply(function() {
+                $scope.downloaded_count = $scope.downloaded_count + 1;
+                $scope.progress = $scope.downloaded_count * 100 / 604;
+              }
               callback();
             }
           }
@@ -95,6 +105,11 @@ angular.module('quran.controllers', ['ionic'])
           if (err && err != "Download stopped") {
             window.alert("An error occured while downloading. Plaese make sure the Internet is on & there is enough space in memory");
             console.log(err);
+          } else {
+            localStorage.setItem("all_pages_downloaded", true);
+            $scope.$apply(function() {
+              $scope.not_all_downloaded = false;
+            }
           }
         });
       }, errorHandler);
