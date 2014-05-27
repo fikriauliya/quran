@@ -23,12 +23,31 @@ angular.module('quran.controllers', ['ionic'])
     $state.go('app.page', {'pageNo':cur_surah.page})
   }
 
-  var stopDownload = false;
+  $scope.startDownload = function() {
+    $scope.progress = 0;
+    $scope.downloaded_count = 0;
 
-  $scope.progress = 0;
-  $scope.downloaded_count = 0;
+    var stopDownload = false;
+    var popup = $ionicPopup.show({
+      templateUrl: 'templates/download-modal.html',
+      title: 'Downloading...',
+      scope: $scope,
+      buttons: [
+        { 
+          text: 'Cancel',
+          type: 'button-positive',
+          onTap: function(e){
+            stopDownload = true;
+            return "Canceled";
+          }
+        }
+      ]
+    });
+    popup.then(function(res) {
+      console.log("Popup closed");
+      console.log(res);
+    });
 
-  $scope.startDownload = function(popup) {
     window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
     window.requestFileSystem(PERSISTENT, 0, onInitFs, errorHandler);  
 
@@ -91,26 +110,7 @@ angular.module('quran.controllers', ['ionic'])
     var is_first_time_loading = localStorage.getItem("is_first_time_loading");
     if (is_first_time_loading === null) {
       localStorage.setItem("is_first_time_loading", true);
-      var popup = $ionicPopup.show({
-        templateUrl: 'templates/download-modal.html',
-        title: 'Downloading...',
-        scope: $scope,
-        buttons: [
-          { 
-            text: 'Cancel',
-            type: 'button-positive',
-            onTap: function(e){
-              stopDownload = true;
-              return "Canceled";
-            }
-          }
-        ]
-      });
-      popup.then(function(res) {
-        console.log("Popup closed");
-        console.log(res);
-      });
-      $scope.startDownload(popup);
+      $scope.startDownload();
     } else {
       console.log("Not first time loading");
     }
