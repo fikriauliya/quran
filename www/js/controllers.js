@@ -96,7 +96,7 @@ angular.module('quran.controllers', ['ionic'])
               $scope.$apply(function() {
                 $scope.downloaded_count = $scope.downloaded_count + 1;
                 $scope.progress = $scope.downloaded_count * 100 / 604;
-              }
+              });
               callback();
             }
           }
@@ -109,7 +109,7 @@ angular.module('quran.controllers', ['ionic'])
             localStorage.setItem("all_pages_downloaded", true);
             $scope.$apply(function() {
               $scope.not_all_downloaded = false;
-            }
+            });
           }
         });
       }, errorHandler);
@@ -134,7 +134,7 @@ angular.module('quran.controllers', ['ionic'])
   }
 })
 
-.controller('PageCtrl', function($scope, $stateParams, SurahTextServices) {
+.controller('PageCtrl', function($scope, $state, $stateParams, SurahTextServices) {
   $scope.pageNo = $stateParams.pageNo;
   $scope.surahName = SurahTextServices.getSurahName(SurahTextServices.getSurahNo($scope.pageNo));
   $scope.status = "";
@@ -178,5 +178,9 @@ angular.module('quran.controllers', ['ionic'])
       $scope.pageNo = 1;
     }
     $scope.surahName = SurahTextServices.getSurahName(SurahTextServices.getSurahNo($scope.pageNo));
+  }
+
+  $scope.goHome = function(cur_surah) {
+    $state.go('app.pages')
   }
 });
