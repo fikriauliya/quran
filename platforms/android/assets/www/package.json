@@ -1,0 +1,8 @@
+{
+  "name": "quran",
+  "version": "1.0.0",
+  "description": "Quran reader",
+  "dependencies": {
+    "async": "~0.9.0"
+  }
+}
