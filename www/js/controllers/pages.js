@@ -1,6 +1,6 @@
-angular.module('quran.controllers.pages', ['ionic'])
+angular.module('quran.controllers.pages', ['ionic', 'fsCordova'])
 
-.controller('PagesCtrl', function($scope, $state, $ionicPopup, SurahTextServices) {
+.controller('PagesCtrl', function($scope, $state, $ionicPopup, SurahTextServices, CordovaService) {
   $scope.surah = SurahTextServices.getAllSurah();
   if (localStorage.getItem("all_pages_downloaded") === null){
     $scope.not_all_downloaded = true;
@@ -104,15 +104,17 @@ angular.module('quran.controllers.pages', ['ionic'])
     }
   }
 
-  if (typeof(FileTransfer) === "function") { 
-    var is_first_time_loading = localStorage.getItem("is_first_time_loading");
-    if (is_first_time_loading === null) {
-      localStorage.setItem("is_first_time_loading", true);
-      $scope.startDownload();
+  CordovaService.ready.then(function() {
+    if (typeof(FileTransfer) === "function") { 
+      var is_first_time_loading = localStorage.getItem("is_first_time_loading");
+      if (is_first_time_loading === null) {
+        localStorage.setItem("is_first_time_loading", true);
+        $scope.startDownload();
+      } else {
+        console.log("Not first time loading");
+      }
     } else {
-      console.log("Not first time loading");
+      console.log("FileTransfer function is undefined");
     }
-  } else {
-    console.log("FileTransfer function is undefined");
-  }
+  });
 });

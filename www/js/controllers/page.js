@@ -1,6 +1,6 @@
-angular.module('quran.controllers.page', ['ionic'])
+angular.module('quran.controllers.page', ['ionic', 'fsCordova'])
 
-.controller('PageCtrl', function($scope, $state, $stateParams, SurahTextServices) {
+.controller('PageCtrl', function($scope, $state, $stateParams, SurahTextServices, CordovaService) {
   $scope.pageNo = $stateParams.pageNo;
   $scope.surahName = SurahTextServices.getSurahName(SurahTextServices.getSurahNo($scope.pageNo));
   $scope.status = "";
@@ -10,17 +10,19 @@ angular.module('quran.controllers.page', ['ionic'])
   if (is_downloaded === null) {
     errorHandler("Page is not yet downloaded");
   } else {
-    window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
-    window.requestFileSystem(PERSISTENT, 0, onInitFs, errorHandler);
+    CordovaService.ready.then(function() {
+      window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+      window.requestFileSystem(PERSISTENT, 0, onInitFs, errorHandler);
 
-    function onInitFs(fileSystem) {
-      fileSystem.root.getDirectory('quran_resources', {create: true}, function(dirEntry) {
-        console.log(dirEntry.toURL());
-        $scope.$apply(function(){
-          $scope.baseImageURL = dirEntry.toURL() + '/quran';
+      function onInitFs(fileSystem) {
+        fileSystem.root.getDirectory('quran_resources', {create: true}, function(dirEntry) {
+          console.log(dirEntry.toURL());
+          $scope.$apply(function(){
+            $scope.baseImageURL = dirEntry.toURL() + '/quran';
+          });
         });
-      });
-    }
+      }
+    });
   }
   
   function errorHandler(message) {
