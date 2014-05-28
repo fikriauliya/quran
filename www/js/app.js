@@ -4,7 +4,11 @@
 // 'quran' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'quran.controllers' is found in controllers.js
-angular.module('quran', ['ionic', 'quran.controllers', 'quran.services'])
+angular.module('quran', ['ionic', 
+  'quran.controllers.app', 
+  'quran.controllers.page', 
+  'quran.controllers.pages', 
+  'quran.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
