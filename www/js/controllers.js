@@ -3,20 +3,6 @@ angular.module('quran.controllers', ['ionic'])
 .controller('AppCtrl', function($scope) {
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-})
-
 .controller('PagesCtrl', function($scope, $state, $ionicPopup, SurahTextServices) {
   $scope.surah = SurahTextServices.getAllSurah();
   if (localStorage.getItem("all_pages_downloaded") === null){
